@@ -27,15 +27,15 @@ void Purpleslime_spawn(struct Slime list_PurpleSlime[], int nb_PurpleSlime) {
     }
 }
 
-void PurpleSlimecol(struct Slime list_PurpleSlime[],struct Player player, int nb_PurpleSlime) {
+void PurpleSlimecol(struct Slime list_PurpleSlime[], struct Player player, ,struct Arrow* arrow, int nb_PurpleSlime, int* hp) {
     for (int i = 0; i < nb_PurpleSlime; 0) {
-        if (abs(player.X - PurpleSlimeX[i]) < 75 && abs(player.Y - PurpleSlimeY[i]) < 50) {
+        if (abs(player.X - list_PurpleSlime[i].X) < 75 && abs(player.Y - list_PurpleSlime[i].Y) < 50) {
             player.X = 500;
             player.Y = 500;
             hp -= 1;
         }
-        if (abs(ArrowX - PurpleSlimeX[i]) < 100 && abs(ArrowY - PurpleSlimeY[i]) < 75) {
-            lifespan = 50;
+        if (abs(arrow -> X - list_PurpleSlime[i].X) < 100 && abs(arrow -> Y - list_PurpleSlime[i].Y) < 75) {
+            arrow -> lifespan = 50;
         }
     }
 }
