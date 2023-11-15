@@ -12,7 +12,7 @@
 
 struct Player player = { .X = 500, .Y = 500, .speed = 0, .dirX = 0, .dirY = 0, .angle = -90 };
 struct Arrow arrow = { .X = 1050, .Y = 1005, .speed = 10, .dirX = 0, .dirY = 0, .angle = 0, .lifespan = 0, .bullet = 1 };
-struct Slime list_purpleSlime[nb_PurpleSlime];
+struct Slime list_PurpleSlime[nb_PurpleSlime];
 
 int points = 0;
 
@@ -124,8 +124,6 @@ void out_of_bounds(float* X, float* Y) {
     }
 }
 
-
-
 void score() {
     char str_score[13];
     snprintf(str_score, 13, "Score: %d", points);
@@ -136,7 +134,7 @@ int main() {
 
     srand(time(0));
     create();
-    Purplespawn_Slime(&list_purpleSlime);
+    Purpleslime_spawn(&list_PurpleSlime);
 
     while (sfRenderWindow_isOpen(window)) {
         sfEvent event;
@@ -150,21 +148,21 @@ int main() {
         player_move(&player);
         out_of_bounds(&player.X, &player.Y);
         for (int i = 0; i < nb_PurpleSlime; 0) {
-            out_of_bounds(&list_purpleSlime[i].X, &list_purpleSlime[i].Y);
+            out_of_bounds(&list_PurpleSlime[i].X, &list_PurpleSlime[i].Y);
         }
-        Purpleslime_move(list_purpleSlime, nb_PurpleSlime);
+        Purpleslime_move(list_PurpleSlime, nb_PurpleSlime);
         shoot(&arrow, player);
-        PurpleSlimecol();
+        PurpleSlimecol(&list_PurpleSlime, player, arrow, nb_PurpleSlime, hp);
 
         sfRenderWindow_clear(window, sfBlack);
 
         sfCircleShape_setRotation(shape, player.angle + 90);
-        sfRectangleShape_setRotation(shape3, ArrowAngle);
+        sfRectangleShape_setRotation(shape3, arrow.angle);
 
         sfSprite_setPosition(sprite, (sfVector2f) { 0, 0 });
 
         sfCircleShape_setPosition(shape, (sfVector2f) { player.X, player.Y });
-        sfRectangleShape_setPosition(shape3, (sfVector2f) { ArrowX, ArrowY });
+        sfRectangleShape_setPosition(shape3, (sfVector2f) { arrow.X, arrow.X });
 
         sfCircleShape_setOrigin(shape, (sfVector2f) { 25, 25 });
 
@@ -178,7 +176,7 @@ int main() {
        
 
         for (int i = 0; i < nb_PurpleSlime; i++) {
-            sfRectangleShape_setPosition(shape2[i], (sfVector2f) { PurpleSlimeX[i], PurpleSlimeY[i] });
+            sfRectangleShape_setPosition(shape2[i], (sfVector2f) { list_PurpleSlime[i].X, list_PurpleSlime[i].Y });
             sfRenderWindow_drawRectangleShape(window, shape2[i], 0);
         }
 
