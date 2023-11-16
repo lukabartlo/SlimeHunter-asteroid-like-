@@ -7,7 +7,7 @@ struct Slime {
     float dirX;
     float dirY;
     float angle;
-    sfRectangleShape* shape;
+    int size;
 };
 
 void Purpleslime_move(list_PurpleSlime, nb_PurpleSlime);
