@@ -8,11 +8,11 @@
 #include "player.h"
 #include "slime.h"
 #include "arrow.h"
-#define nb_PurpleSlime 24
+#define nb_Slime 24
 
 struct Player player = { .X = 500, .Y = 500, .speed = 0, .dirX = 0, .dirY = 0, .angle = -90 };
 struct Arrow arrow = { .X = 0, .Y = 0, .speed = 10, .dirX = 0, .dirY = 0, .angle = 0, .lifespan = 0};
-struct Slime list_PurpleSlime[nb_PurpleSlime];
+struct Slime list_Slime[nb_Slime];
 
 int points = 0;
 
@@ -30,10 +30,10 @@ sfText* text_score;
 sfRenderWindow* window;
 
 sfRectangleShape* shape;                         //shape Bow
-sfRectangleShape* shape2[nb_PurpleSlime];        //shape PurpleSlime
+sfRectangleShape* shape2[nb_Slime];        //shape PurpleSlime
 sfRectangleShape* shape3;                        //shape Arrow
-sfRectangleShape* shape4[nb_PurpleSlime];        //shape BlueSlime
-sfRectangleShape* shape5[nb_PurpleSlime];        //shape GreenSlime
+sfRectangleShape* shape4[nb_Slime];        //shape BlueSlime
+sfRectangleShape* shape5[nb_Slime];        //shape GreenSlime
 sfRectangleShape* shape6[3];                     //shape Heart
 
 sfSprite* sprite;                                //Sprite Map
@@ -73,24 +73,24 @@ void create() {
     texture6 = sfTexture_createFromFile("MapSlimeHunter.png", 0);
     texture7 = sfTexture_createFromFile("Heart.png", 0);
 
-    for (int i = 0; i < nb_PurpleSlime; i++) {
-        list_PurpleSlime[i].size = 0;
+    for (int i = 0; i < nb_Slime; i++) {
+        list_Slime[i].size = 0;
         shape2[i] = sfRectangleShape_create();
         sfRectangleShape_setSize(shape2[i], (sfVector2f) { 150, 100 });
         sfRectangleShape_setTexture(shape2[i], texture2, 0);
         sfRectangleShape_setOrigin(shape2[i], (sfVector2f) { 75, 50 });
     }
 
-    for (int i = 0; i < nb_PurpleSlime; i++) {
-        list_PurpleSlime[i].size = 0;
+    for (int i = 0; i < nb_Slime; i++) {
+        list_Slime[i].size = 0;
         shape4[i] = sfRectangleShape_create();
         sfRectangleShape_setSize(shape4[i], (sfVector2f) { 75, 50 });
         sfRectangleShape_setTexture(shape4[i], texture4, 0);
         sfRectangleShape_setOrigin(shape4[i], (sfVector2f) { 34.5f, 25 });
     }
 
-    for (int i = 0; i < nb_PurpleSlime; i++) {
-        list_PurpleSlime[i].size = 0;
+    for (int i = 0; i < nb_Slime; i++) {
+        list_Slime[i].size = 0;
         shape5[i] = sfRectangleShape_create();
         sfRectangleShape_setSize(shape5[i], (sfVector2f) { 34.5f, 25 });
         sfRectangleShape_setTexture(shape5[i], texture5, 0);
@@ -153,7 +153,7 @@ int main() {
     srand(time(0));
     create();
     for (int i = 0; i < 6; i++) {
-        Purpleslime_spawn(&list_PurpleSlime, nb_PurpleSlime, 3, 0, 0);
+        Purpleslime_spawn(&list_Slime, nb_Slime, 3, 0, 0);
     }
 
     while (sfRenderWindow_isOpen(window)) {
@@ -167,12 +167,12 @@ int main() {
         Delta();
         player_move(&player);
         out_of_bounds(&player.X, &player.Y);
-        for (int i = 0; i < nb_PurpleSlime; i++) {
-            out_of_bounds(&list_PurpleSlime[i].X, &list_PurpleSlime[i].Y);
+        for (int i = 0; i < nb_Slime; i++) {
+            out_of_bounds(&list_Slime[i].X, &list_Slime[i].Y);
         }
-        Purpleslime_move(&list_PurpleSlime, nb_PurpleSlime);
+        Purpleslime_move(&list_Slime, nb_Slime);
         shoot(&arrow, &player);
-        PurpleSlimecol(&list_PurpleSlime, &player, &arrow, nb_PurpleSlime, &hp, &points);
+        PurpleSlimecol(&list_Slime, &player, &arrow, nb_Slime, &hp, &points);
 
         sfRenderWindow_clear(window, sfBlack);
 
@@ -194,17 +194,17 @@ int main() {
             sfRenderWindow_drawRectangleShape(window, shape3, 0);
         }
 
-        for (int i = 0; i < nb_PurpleSlime; i++) {
-            if (list_PurpleSlime[i].size == 3) {
-                sfRectangleShape_setPosition(shape2[i], (sfVector2f) { list_PurpleSlime[i].X, list_PurpleSlime[i].Y });
+        for (int i = 0; i < nb_Slime; i++) {
+            if (list_Slime[i].size == 3) {
+                sfRectangleShape_setPosition(shape2[i], (sfVector2f) { list_Slime[i].X, list_Slime[i].Y });
                 sfRenderWindow_drawRectangleShape(window, shape2[i], 0);
             }
-            else if (list_PurpleSlime[i].size == 2) {
-                sfRectangleShape_setPosition(shape4[i], (sfVector2f) { list_PurpleSlime[i].X, list_PurpleSlime[i].Y });
+            else if (list_Slime[i].size == 2) {
+                sfRectangleShape_setPosition(shape4[i], (sfVector2f) { list_Slime[i].X, list_Slime[i].Y });
                 sfRenderWindow_drawRectangleShape(window, shape4[i], 0);
             }
-            else if (list_PurpleSlime[i].size == 1) {
-                sfRectangleShape_setPosition(shape5[i], (sfVector2f) { list_PurpleSlime[i].X, list_PurpleSlime[i].Y });
+            else if (list_Slime[i].size == 1) {
+                sfRectangleShape_setPosition(shape5[i], (sfVector2f) { list_Slime[i].X, list_Slime[i].Y });
                 sfRenderWindow_drawRectangleShape(window, shape5[i], 0);
             }
         }
@@ -221,7 +221,7 @@ int main() {
 
     sfRectangleShape_destroy(shape);
 
-    for (int i = 0; i < nb_PurpleSlime; i++) {
+    for (int i = 0; i < nb_Slime; i++) {
         sfRectangleShape_destroy(shape2[i]);
         sfRectangleShape_destroy(shape4[i]);
         sfRectangleShape_destroy(shape5[i]);

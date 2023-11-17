@@ -9,85 +9,85 @@
 #include "player.h"
 #include "arrow.h"
 
-void Purpleslime_move(struct Slime list_PurpleSlime[], int nb_PurpleSlime) {
-    for (int i = 0; i < nb_PurpleSlime; i++) {
-        if (list_PurpleSlime[i].size != 0) {
-            list_PurpleSlime[i].dirX = cosf(list_PurpleSlime[i].angle * 3.1415f / 180.0f);
-            list_PurpleSlime[i].dirY = sinf(list_PurpleSlime[i].angle * 3.1415f / 180.0f);
-            if (list_PurpleSlime[i].size == 3) {
-                list_PurpleSlime[i].speed = (rand() % 3 + 2);
+void Purpleslime_move(struct Slime list_Slime[], int nb_Slime) {
+    for (int i = 0; i < nb_Slime; i++) {
+        if (list_Slime[i].size != 0) {
+            list_Slime[i].dirX = cosf(list_Slime[i].angle * 3.1415f / 180.0f);
+            list_Slime[i].dirY = sinf(list_Slime[i].angle * 3.1415f / 180.0f);
+            if (list_Slime[i].size == 3) {
+                list_Slime[i].speed = (rand() % 3 + 2);
             }
-            else if (list_PurpleSlime[i].size == 2) {
-                list_PurpleSlime[i].speed = (rand() % 3 + 3);
+            else if (list_Slime[i].size == 2) {
+                list_Slime[i].speed = (rand() % 3 + 3);
             }
-            else if (list_PurpleSlime[i].size == 1) {
-                list_PurpleSlime[i].speed = (rand() % 3 + 4);
+            else if (list_Slime[i].size == 1) {
+                list_Slime[i].speed = (rand() % 3 + 4);
             }
-            list_PurpleSlime[i].X += list_PurpleSlime[i].dirX * list_PurpleSlime[i].speed;
-            list_PurpleSlime[i].Y += list_PurpleSlime[i].dirY * list_PurpleSlime[i].speed;
+            list_Slime[i].X += list_Slime[i].dirX * list_Slime[i].speed;
+            list_Slime[i].Y += list_Slime[i].dirY * list_Slime[i].speed;
         }
     }
 }
 
-void Purpleslime_spawn(struct Slime list_PurpleSlime[], int nb_PurpleSlime, int size, int posX, int posY) {
-    for (int i = 0; i < nb_PurpleSlime ; i++) {
-        if (list_PurpleSlime[i].size == 0) {
+void Purpleslime_spawn(struct Slime list_Slime[], int nb_Slime, int size, int posX, int posY) {
+    for (int i = 0; i < nb_Slime ; i++) {
+        if (list_Slime[i].size == 0) {
             if (posX == 0 && posY == 0) {
-                list_PurpleSlime[i].X = rand() % 1000;
-                list_PurpleSlime[i].Y = rand() % 1000;
+                list_Slime[i].X = rand() % 1000;
+                list_Slime[i].Y = rand() % 1000;
             }
             else {
-                list_PurpleSlime[i].X = posX;
-                list_PurpleSlime[i].Y = posY;
+                list_Slime[i].X = posX;
+                list_Slime[i].Y = posY;
             }
-            list_PurpleSlime[i].angle = rand() % 360;
-            list_PurpleSlime[i].size = size;
+            list_Slime[i].angle = rand() % 360;
+            list_Slime[i].size = size;
             return;
         }
     }
 }
 
-void PurpleSlimecol(struct Slime list_PurpleSlime[], struct Player* player, struct Arrow* arrow, int nb_PurpleSlime, int* hp, int* points) {
-    for (int i = 0; i < nb_PurpleSlime; i++) {
-        if (list_PurpleSlime[i].size != 0) {
-            if (list_PurpleSlime[i].size == 3) {
-                if (abs(player->X - list_PurpleSlime[i].X) < 75 && abs(player -> Y - list_PurpleSlime[i].Y) < 50) {
+void PurpleSlimecol(struct Slime list_Slime[], struct Player* player, struct Arrow* arrow, int nb_Slime, int* hp, int* points) {
+    for (int i = 0; i < nb_Slime; i++) {
+        if (list_Slime[i].size != 0) {
+            if (list_Slime[i].size == 3) {
+                if (abs(player->X - list_Slime[i].X) < 75 && abs(player -> Y - list_Slime[i].Y) < 50) {
                     player -> X = 500;
                     player -> Y = 500;
                     *hp -= 1;
                 }
-                if (abs(arrow->X - list_PurpleSlime[i].X) < 100 && abs(arrow -> Y - list_PurpleSlime[i].Y) < 75) {
+                if (abs(arrow->X - list_Slime[i].X) < 100 && abs(arrow -> Y - list_Slime[i].Y) < 75) {
                     arrow -> lifespan = 50;
-                    Purpleslime_spawn(list_PurpleSlime, nb_PurpleSlime, list_PurpleSlime[i].size - 1, list_PurpleSlime[i].X, list_PurpleSlime[i].Y);
-                    Purpleslime_spawn(list_PurpleSlime, nb_PurpleSlime, list_PurpleSlime[i].size - 1, list_PurpleSlime[i].X, list_PurpleSlime[i].Y);
-                    list_PurpleSlime[i].size = 0;
+                    Purpleslime_spawn(list_Slime, nb_Slime, list_Slime[i].size - 1, list_Slime[i].X, list_Slime[i].Y);
+                    Purpleslime_spawn(list_Slime, nb_Slime, list_Slime[i].size - 1, list_Slime[i].X, list_Slime[i].Y);
+                    list_Slime[i].size = 0;
                     *points += 25;
 
                 }
             }
-            else if (list_PurpleSlime[i].size == 2) {
-                if (abs(player -> X - list_PurpleSlime[i].X) < 34.5f && abs(player -> Y - list_PurpleSlime[i].Y) < 25) {
+            else if (list_Slime[i].size == 2) {
+                if (abs(player -> X - list_Slime[i].X) < 34.5f && abs(player -> Y - list_Slime[i].Y) < 25) {
                     player -> X = 500;
                     player -> Y = 500;
                     *hp -= 1;
                 }
-                if (abs(arrow -> X - list_PurpleSlime[i].X) < 50 && abs(arrow -> Y - list_PurpleSlime[i].Y) < 34.5f) {
+                if (abs(arrow -> X - list_Slime[i].X) < 50 && abs(arrow -> Y - list_Slime[i].Y) < 34.5f) {
                     arrow -> lifespan = 50;
-                    Purpleslime_spawn(list_PurpleSlime, nb_PurpleSlime, list_PurpleSlime[i].size - 1, list_PurpleSlime[i].X, list_PurpleSlime[i].Y);
-                    Purpleslime_spawn(list_PurpleSlime, nb_PurpleSlime, list_PurpleSlime[i].size - 1, list_PurpleSlime[i].X, list_PurpleSlime[i].Y);
-                    list_PurpleSlime[i].size = 0;
+                    Purpleslime_spawn(list_Slime, nb_Slime, list_Slime[i].size - 1, list_Slime[i].X, list_Slime[i].Y);
+                    Purpleslime_spawn(list_Slime, nb_Slime, list_Slime[i].size - 1, list_Slime[i].X, list_Slime[i].Y);
+                    list_Slime[i].size = 0;
                     *points += 50;
                 }
             }
-            else if (list_PurpleSlime[i].size == 1) {
-                if (abs(player -> X - list_PurpleSlime[i].X) < 17.25f && abs(player -> Y - list_PurpleSlime[i].Y) < 25) {
+            else if (list_Slime[i].size == 1) {
+                if (abs(player -> X - list_Slime[i].X) < 17.25f && abs(player -> Y - list_Slime[i].Y) < 25) {
                     player -> X = 500;
                     player -> Y = 500;
                     *hp -= 1;
                 }
-                if (abs(arrow->X - list_PurpleSlime[i].X) < 25 && abs(arrow -> Y - list_PurpleSlime[i].Y) < 17.25f) {
+                if (abs(arrow->X - list_Slime[i].X) < 25 && abs(arrow -> Y - list_Slime[i].Y) < 17.25f) {
                     arrow -> lifespan = 50;
-                    list_PurpleSlime[i].size = 0;
+                    list_Slime[i].size = 0;
                     *points += 100;
                 }
             }
