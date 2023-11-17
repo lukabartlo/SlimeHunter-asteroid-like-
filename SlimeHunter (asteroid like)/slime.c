@@ -71,7 +71,7 @@ void PurpleSlimecol(struct Slime list_Slime[], struct Player* player, struct Arr
                     player -> Y = 500;
                     *hp -= 1;
                 }
-                if (abs(arrow -> X - list_Slime[i].X) < 50 && abs(arrow -> Y - list_Slime[i].Y) < 34.5f) {
+                if (abs(arrow -> X - list_Slime[i].X) < 50 && abs(arrow -> Y - list_Slime[i].Y) < 34.5f && arrow -> lifespan > 0) {
                     arrow -> lifespan = 50;
                     Purpleslime_spawn(list_Slime, nb_Slime, list_Slime[i].size - 1, list_Slime[i].X, list_Slime[i].Y);
                     Purpleslime_spawn(list_Slime, nb_Slime, list_Slime[i].size - 1, list_Slime[i].X, list_Slime[i].Y);
