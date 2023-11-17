@@ -15,13 +15,13 @@ void Purpleslime_move(struct Slime list_Slime[], int nb_Slime) {
             list_Slime[i].dirX = cosf(list_Slime[i].angle * 3.1415f / 180.0f);
             list_Slime[i].dirY = sinf(list_Slime[i].angle * 3.1415f / 180.0f);
             if (list_Slime[i].size == 3) {
-                list_Slime[i].speed = (rand() % 3 + 2);
+                list_Slime[i].speed = (rand() % 3+1);
             }
             else if (list_Slime[i].size == 2) {
-                list_Slime[i].speed = (rand() % 3 + 3);
+                list_Slime[i].speed = (rand() % 3+1.5f);
             }
             else if (list_Slime[i].size == 1) {
-                list_Slime[i].speed = (rand() % 3 + 4);
+                list_Slime[i].speed = (rand() % 3+2);
             }
             list_Slime[i].X += list_Slime[i].dirX * list_Slime[i].speed;
             list_Slime[i].Y += list_Slime[i].dirY * list_Slime[i].speed;
@@ -47,7 +47,7 @@ void Purpleslime_spawn(struct Slime list_Slime[], int nb_Slime, int size, int po
     }
 }
 
-void PurpleSlimecol(struct Slime list_Slime[], struct Player* player, struct Arrow* arrow, int nb_Slime, int* hp, int* points) {
+void Slimecol(struct Slime list_Slime[], struct Player* player, struct Arrow* arrow, int nb_Slime, int* hp, int* points) {
     for (int i = 0; i < nb_Slime; i++) {
         if (list_Slime[i].size != 0) {
             if (list_Slime[i].size == 3) {

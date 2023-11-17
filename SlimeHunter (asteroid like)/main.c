@@ -16,37 +16,38 @@ struct Slime list_Slime[nb_Slime];
 
 int points = 0;
 
-int delta = 0;
+int timer = 0;
 
 int hp = 3;
 
-//bool PurplesSlime_dead = false;
-
-sfClock* deltaClock;
+sfClock* TimerClock;
 
 sfFont* font1;
 sfText* text_score;
+sfText* text_timer;
+sfText* text_restart;
+sfText* text_quit;
 
 sfRenderWindow* window;
 
 sfRectangleShape* shape;                         //shape Bow
-sfRectangleShape* shape2[nb_Slime];        //shape PurpleSlime
+sfRectangleShape* shape2[nb_Slime];              //shape PurpleSlime
 sfRectangleShape* shape3;                        //shape Arrow
-sfRectangleShape* shape4[nb_Slime];        //shape BlueSlime
-sfRectangleShape* shape5[nb_Slime];        //shape GreenSlime
+sfRectangleShape* shape4[nb_Slime];              //shape BlueSlime
+sfRectangleShape* shape5[nb_Slime];              //shape GreenSlime
 sfRectangleShape* shape6[3];                     //shape Heart
 
 sfSprite* sprite;                                //Sprite Map
-//sfSprite* sprite2;                             //Sprite GameOver
+sfSprite* sprite2;                               //Sprite GameOver
 
 sfTexture* texture;                              //Texture Bow
 sfTexture* texture2;                             //Texture PurpleSlime
 sfTexture* texture3;                             //Texture Arrow
 sfTexture* texture4;                             //Texture BlueSlime
-sfTexture* texture5;                          //Texture GreenSlime
+sfTexture* texture5;                             //Texture GreenSlime
 sfTexture* texture6;                             //Texture Map
 sfTexture* texture7;                             //Texture Heart
-//sfTexture* texture8;                           //Texture GameOver
+sfTexture* texture8;                             //Texture GameOver
 
 void create() {
 
@@ -54,9 +55,14 @@ void create() {
     window = sfRenderWindow_create(mode, "SlimeHunter", sfResize | sfClose, 0);
     sfRenderWindow_setFramerateLimit(window, 60);
 
-    deltaClock = sfClock_create();
+    TimerClock = sfClock_create();
+
+    
 
     text_score = sfText_create();
+    text_timer = sfText_create();
+    text_restart = sfText_create();
+    text_quit = sfText_create();
 
     shape = sfRectangleShape_create();
     shape3 = sfRectangleShape_create();
@@ -64,6 +70,7 @@ void create() {
     font1 = sfFont_createFromFile("pixeltext.ttf");
 
     sprite = sfSprite_create();
+    sprite2 = sfSprite_create();
 
     texture = sfTexture_createFromFile("Arc.png", 0);
     texture2 = sfTexture_createFromFile("SlimeViolet.png", 0);
@@ -72,6 +79,7 @@ void create() {
     texture5 = sfTexture_createFromFile("SlimeVert.png", 0);
     texture6 = sfTexture_createFromFile("MapSlimeHunter.png", 0);
     texture7 = sfTexture_createFromFile("Heart.png", 0);
+    texture8 = sfTexture_createFromFile("gameover.png", 0);
 
     for (int i = 0; i < nb_Slime; i++) {
         list_Slime[i].size = 0;
@@ -108,19 +116,27 @@ void create() {
     sfRectangleShape_setSize(shape3, (sfVector2f) { 62, 22 });
 
     sfSprite_setTexture(sprite, texture6, 0);
+    sfSprite_setTexture(sprite2, texture8, 0);
+
+    sfSprite_setScale(sprite2, (sfVector2f) { 10, 10 });
 
     sfRectangleShape_setTexture(shape, texture, 0);
     sfRectangleShape_setTexture(shape3, texture3, 0);
 
     sfText_scale(text_score, (sfVector2f) { 0.75f, 0.75f });
+    sfText_scale(text_timer, (sfVector2f) { 0.75f, 0.75f });
+    sfText_scale(text_restart, (sfVector2f) { 1.5f, 1.5f });
+    sfText_scale(text_quit, (sfVector2f) { 1.5f, 1.5f });
+
     sfText_setFont(text_score, font1);
+    sfText_setFont(text_timer, font1);
+    sfText_setFont(text_restart, font1);
+    sfText_setFont(text_quit, font1);
 }
 
-void Delta() {
-
-    sfTime dtime = sfClock_getElapsedTime(deltaClock);
-    delta = sfTime_asMilliseconds(dtime);
-    sfClock_restart(deltaClock);
+void Timer() {
+    sfTime dtime = sfClock_getElapsedTime(TimerClock);
+    timer = sfTime_asSeconds(dtime);
 }
 
 void out_of_bounds(float* X, float* Y) {
@@ -148,6 +164,20 @@ void score() {
     sfText_setString(text_score, str_score);
 }
 
+void Timer_text() {
+    char str_timer[13];
+    snprintf(str_timer, 13, "Timer: %d", timer);
+    sfText_setString(text_timer, str_timer);
+}
+
+void restart_botton() {
+    sfText_setString(text_restart, "Restart");
+}
+
+void quit_button() {
+    sfText_setString(text_quit, "Quit");
+}
+
 int main() {
 
     srand(time(0));
@@ -163,16 +193,22 @@ int main() {
                 sfRenderWindow_close(window);
         }
 
-        score();
-        Delta();
-        player_move(&player);
-        out_of_bounds(&player.X, &player.Y);
-        for (int i = 0; i < nb_Slime; i++) {
-            out_of_bounds(&list_Slime[i].X, &list_Slime[i].Y);
+        if (hp > 0) {
+            Timer();
+            player_move(&player);
+            Purpleslime_move(&list_Slime, nb_Slime);
+            for (int i = 0; i < nb_Slime; i++) {
+                out_of_bounds(&list_Slime[i].X, &list_Slime[i].Y);
+            }
+            out_of_bounds(&player.X, &player.Y);
+            shoot(&arrow, &player);
+            Slimecol(&list_Slime, &player, &arrow, nb_Slime, &hp, &points);
         }
-        Purpleslime_move(&list_Slime, nb_Slime);
-        shoot(&arrow, &player);
-        PurpleSlimecol(&list_Slime, &player, &arrow, nb_Slime, &hp, &points);
+
+        Timer_text();
+        score();
+        restart_botton();
+        quit_button();
 
         sfRenderWindow_clear(window, sfBlack);
 
@@ -210,10 +246,45 @@ int main() {
         }
 
         sfText_setPosition(text_score, (sfVector2f) { 5, 12.5f });
+        sfText_setPosition(text_timer, (sfVector2f) { 5, 100 });
+
         sfRenderWindow_drawText(window, text_score, 0);
+        sfRenderWindow_drawText(window, text_timer, 0);
 
         for (int i = 0; i < hp; i++) {
             sfRenderWindow_drawRectangleShape(window, shape6[i], 0);
+        }
+
+        if (hp <= 0) {
+            sfSprite_setPosition(sprite2, (sfVector2f) { 0, 0 });
+            sfRenderWindow_drawSprite(window, sprite2, NULL);
+
+            sfText_setPosition(text_score, (sfVector2f) { 250, 500 });
+            sfText_setPosition(text_timer, (sfVector2f) { 600, 500 });
+            sfText_setPosition(text_restart, (sfVector2f) { 200, 750 });
+            sfText_setPosition(text_quit, (sfVector2f) { 650, 750 });
+            
+            sfFloatRect mouserect = (sfFloatRect){ sfMouse_getPosition(window).x, sfMouse_getPosition(window).y, 1, 1 };
+            sfFloatRect quitrect = sfText_getGlobalBounds(text_quit);
+            sfFloatRect restartrect = sfText_getGlobalBounds(text_restart);
+            if (sfFloatRect_intersects(&mouserect, &quitrect, NULL) && sfMouse_isButtonPressed(sfMouseLeft)) {
+                sfRenderWindow_close(window);
+            }
+            if (sfFloatRect_intersects(&mouserect, &restartrect, NULL) && sfMouse_isButtonPressed(sfMouseLeft)) {
+                hp = 3;
+                points = 0;
+                timer = 0;
+                sfClock_restart(TimerClock);
+                player.X = 500;
+                player.Y = 500;
+                player.dirX = 0;
+                player.dirY = 0;
+            }
+
+            sfRenderWindow_drawText(window, text_score, NULL);
+            sfRenderWindow_drawText(window, text_timer, NULL);
+            sfRenderWindow_drawText(window, text_restart, NULL);
+            sfRenderWindow_drawText(window, text_quit, NULL);
         }
 
         sfRenderWindow_display(window);
@@ -234,6 +305,7 @@ int main() {
     }
 
     sfSprite_destroy(sprite);
+    sfSprite_destroy(sprite2);
 
     sfTexture_destroy(texture);
     sfTexture_destroy(texture2);
@@ -242,11 +314,16 @@ int main() {
     sfTexture_destroy(texture5);
     sfTexture_destroy(texture6);
     sfTexture_destroy(texture7);
+    sfTexture_destroy(texture8);
 
-    sfClock_destroy(deltaClock);
+    sfClock_destroy(TimerClock);
 
     sfFont_destroy(font1);
+
     sfText_destroy(text_score);
+    sfText_destroy(text_timer);
+    sfText_destroy(text_restart);
+    sfText_destroy(text_quit);
 
     sfRenderWindow_destroy(window);
 

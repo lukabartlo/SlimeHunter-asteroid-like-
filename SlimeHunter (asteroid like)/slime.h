@@ -12,4 +12,4 @@ struct Slime {
 
 void Purpleslime_move(list_Slime, nb_Slime);
 void Purpleslime_spawn(list_Slime, nb_Slime, size, posX, posY);
-void PurpleSlimecol(list_Slime, player, arrow, nb_Slime, hp);
+void Slimecol(list_Slime, player, arrow, nb_Slime, hp);
