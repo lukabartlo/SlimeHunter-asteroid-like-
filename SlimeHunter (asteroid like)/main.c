@@ -51,13 +51,13 @@ sfTexture* texture8;                             //Texture GameOver
 
 void create() {
 
+    sfImage* icon = sfImage_createFromFile("logo_SlimeHunter.png");
     sfVideoMode mode = { 1000, 1000, 32 };
     window = sfRenderWindow_create(mode, "SlimeHunter", sfResize | sfClose, 0);
+    sfWindow_setIcon(window, 175,175, sfImage_getPixelsPtr(icon));
     sfRenderWindow_setFramerateLimit(window, 60);
 
     TimerClock = sfClock_create();
-
-    
 
     text_score = sfText_create();
     text_timer = sfText_create();
