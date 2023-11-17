@@ -152,7 +152,9 @@ int main() {
 
     srand(time(0));
     create();
-    Purpleslime_spawn(&list_PurpleSlime, nb_PurpleSlime);
+    for (int i = 0; i < 6; i++) {
+        Purpleslime_spawn(&list_PurpleSlime, nb_PurpleSlime, 3, 0, 0);
+    }
 
     while (sfRenderWindow_isOpen(window)) {
         sfEvent event;

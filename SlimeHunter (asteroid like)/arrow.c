@@ -9,7 +9,8 @@
 #include "player.h"
 
 void shoot(struct Arrow* arrow, struct Player* player) {
-
+    printf("Position X: %f\n", arrow->X);
+    printf("Position Y: %f\n", arrow->Y);
     if (sfKeyboard_isKeyPressed(sfKeySpace) && arrow -> lifespan == 0) {
         arrow -> X = player -> X;
         arrow -> Y = player -> Y;
@@ -27,7 +28,7 @@ void shoot(struct Arrow* arrow, struct Player* player) {
 
     if (arrow -> lifespan >= 50) {
         arrow -> lifespan = 0;
-        arrow -> X = 1050;
-        arrow -> Y = 1050;
+        arrow -> X = 0;
+        arrow -> Y = 0;
     }
 }
